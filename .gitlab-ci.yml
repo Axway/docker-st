@@ -1,0 +1,54 @@
+before_script:
+- eval export DOCKER_TAG=$CI_COMMIT_REF_NAME
+- | # If we're on the master branch, tag the image as latest
+  if [[ "$CI_COMMIT_REF_NAME" == "master" ]]; then
+    eval export DOCKER_TAG="latest"
+  fi
+- echo Using DOCKER_TAG=$DOCKER_TAG
+
+stages:
+- build
+- test
+- push
+
+build-backend:
+  stage: build
+  script:
+  - cd backend; docker build -t st/backend:$DOCKER_TAG .; cd ..
+
+build-edge:
+  stage: build
+  script:
+  - cd edge; docker build -t st/edge:$DOCKER_TAG .; cd ..
+
+test-backend:
+  stage: test
+  script:
+  - cd backend
+  - docker-compose -f docker-compose.test.yml down -v
+  - docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit --remove-orphans --force-recreate sut
+  after_script:
+  - cd backend
+  - docker-compose -f docker-compose.test.yml down -v
+
+test-edge:
+  stage: test
+  script:
+  - cd edge
+  - docker-compose -f docker-compose.test.yml down -v
+  - docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit --remove-orphans --force-recreate sut
+  after_script:
+  - cd edge
+  - docker-compose -f docker-compose.test.yml down -v
+
+push-backend:
+  stage: push
+  script:
+  - docker tag st/backend:$DOCKER_TAG axway-docker-ci.bintray.io/st/backend:$DOCKER_TAG
+  - docker push axway-docker-ci.bintray.io/st/backend:$DOCKER_TAG
+
+push-edge:
+  stage: push
+  script:
+  - docker tag st/edge:$DOCKER_TAG axway-docker-ci.bintray.io/st/edge:$DOCKER_TAG
+  - docker push axway-docker-ci.bintray.io/st/edge:$DOCKER_TAG

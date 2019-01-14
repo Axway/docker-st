@@ -1,0 +1,40 @@
+version: "3.4"
+services:
+  st-edge:
+    image: st/edge:$DOCKER_TAG
+    environment:
+      ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/5.5.0/st-core-license.txt"
+      ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/5.5.0/st-feature-license.txt"
+      ST_GLOBAL_CONFIG_PATH: /run/secrets/st-edge-services-config-file
+      ST_CA_PATH: /run/secrets/st-root-ca.crt
+      ST_CA_ALIAS: docker_ca
+      ST_CERT_PATH: /run/secrets/st-edge-services-crt.p12
+      ST_CERT_PASS: SECRET123
+      ST_CERT_ALIAS: dockerd
+    stop_grace_period: 2m
+    secrets:
+    - st-edge-services-config-file
+    - st-root-ca.crt
+    - st-edge-services-crt.p12
+    ports:
+    - "9444:444"     # ADMIN
+    - "9021:21"      # FTP
+    - "50000:50020"  # Passive FTP
+    - "9080:80"      # HTTP
+    - "9443:443"     # HTTPS
+    - "9022:22"      # SFTP/SCP
+    - "10080:10080"  # AS2 HTTP
+    - "10443:10443"  # AS2 HTTPs
+    - "17617:17617"  # PESIT-TCP
+    - "17627:17627"  # PESIT-TCP-SSL
+    - "19617:19617"  # PESIT-pTCP
+    - "19627:19627"  # PESIT-pTCP-SSL
+    - "9803:8003"    # DEBUG
+
+secrets:
+  st-edge-services-config-file:
+    file: runtime/STGlobalConfig.properties
+  st-root-ca.crt:
+    file: runtime/certs/ST_DOCKER_CA.crt
+  st-edge-services-crt.p12:
+    file: runtime/certs/ST_EDGE_CERT.p12

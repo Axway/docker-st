@@ -10,8 +10,8 @@ services:
   st-edge:
     image: st/edge:$DOCKER_TAG
     environment:
-      ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/5.5.0/st-core-license.txt"
-      ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/5.5.0/st-feature-license.txt"
+      ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-core-license.txt"
+      ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-feature-license.txt"
       ST_GLOBAL_CONFIG_PATH: /run/secrets/st-edge-services-config-file
       ST_CA_PATH: /run/secrets/st-root-ca.crt
       ST_CA_ALIAS: docker_ca

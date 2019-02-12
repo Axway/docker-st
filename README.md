@@ -1,11 +1,11 @@
-### Secure Transport Backend 5.5
+### Secure Transport
 
 #### Prerequisites
 
 - Docker version >= 17.11
 - Docker-compose version >= 1.17.0
 
-#### [NEW] Basic Configuration through environment variables 
+#### Basic Configuration through environment variables 
 
 Most of the ST's Server Configuration, related to the various services, has been exposed and can be changed via a file. You can specify which service must be started when the container starts, which port to listen to, the certificate alias, cipher suites, etc. In order to supply the file to ST one needs to create a docker secret and set **ST_GLOBAL_CONFIG_PATH** environment variable to specify it's location inside the container.
 
@@ -36,7 +36,7 @@ ST_CERT_ALIAS: dockerd
 
 As with the basic configuration file, the certificates must be supplied using a docker secret via the docker-compose file ([example is located here.](docker-compose.yml)). Note that you can import only one Root CA and one local certificate.
 
-#### [NEW] JVM Parameters for ST services are configurable
+#### JVM Parameters for ST services are configurable
 
 The JVM MIN/MAX memory paramteres for each service are configurable via file that is supplied to ST using docker secrets and environment variable (see docker-compose.yml above).
 
@@ -61,17 +61,17 @@ ADMIN_JAVA_MEM_MAX=128M
 PESIT_JAVA_MEM_MIN=128M
 PESIT_JAVA_MEM_MAX=128M
 ```
-#### [NEW] The application should log everything to stdout/stderr
+#### The application should log everything to stdout/stderr
 
 By default ST keeps its Server Log inside the embedded MySQL database. This will remain like this because the Server Log data is used together with the File Tracking information to help the ST administrator in debugging failed transfers (i.e. the data in the File Tracking tables has links to the data in the Server Log tables).
 
 However for the purposes of the ST - Docker integration most of the Server Log data has been also exposed on STDOUT/STDERR and this is enabled by default when the image is built. Behind the scenes each **-log4j.xml gets additional appenders (Stdout/Stderr) that are commented by default but are enabled duirng the docker image build process.
 
-#### [NEW] Fast stop: In order to be gracefully stopped, a container has 10 seconds (by default) to exit (SIGTERM)
+#### Fast stop: In order to be gracefully stopped, a container has 10 seconds (by default) to exit (SIGTERM)
 
 Becasue ST is a monolithic application one can start multiple services at the same time (SSH, PESIT and AS2 for example). It is hard to stop all of that gracefully under 10 seconds. However the improvement in this version is that the **SecureTransport/bin/start_all** script has been modifed and can now be executed in "trap" mode which means that after all enabled services are started the scripts stays in foreground (not allowing docker to kill the container) and when SIGTERM is received all enabled services are stopped using their respective **stop_XX** script. Since the process takes longer than 10 seconds the example docker-compose.yml file has the **stop_grace_period: 2m** setting to give it enough time (the setting can be tuned of course)
 
-#### [NEW] Start/Stop/Restart container: Sometimes containers perform tasks on first start preventing them to be restarted
+#### Start/Stop/Restart container: Sometimes containers perform tasks on first start preventing them to be restarted
 
 The current docker images uses a Standalone ST with the Embedded MySQL Database. ST is already installed during the image build process and using the above mentioned features the runtime configuration can be easily changed so there is no need to perform any "special" tasks on the first start.
 

@@ -14,15 +14,18 @@ WORKDIR /root/tmp
 COPY build/axway_installer.properties .
 COPY build/st_install.properties .
 
-ENV ARCHIVE SecureTransport_5.5_Q4_2018_Install_linux-x86-64_BN620.zip
-ENV REPOS=https://phx.delivery.axway.int/download_true_name.php?static=$ARCHIVE INSTALL_CRON=false
+ARG VERSION_BASE="5.5_Q4_2018"
+ARG RELEASE_BASE="BN620"
+ARG STATIC_BASE="SecureTransport_${VERSION_BASE}_Install_linux-x86-64_${RELEASE_BASE}.zip"
 
-RUN curl -k $REPOS >${ARCHIVE} \
-    && unzip ./$ARCHIVE \
-    && rm ./$ARCHIVE \
-    && ((tail -F /root/Axway/install.log &) \
-    ; ./setup.sh -s $PWD/axway_installer.properties) \
-    && rm -rf /root/tmp
+ARG URL_BASE="https://axway.bintray.com/delivery/"
+
+RUN curl -kL $URL_BASE$STATIC_BASE -o st-distrib.zip && \
+    unzip st-distrib.zip && \
+    rm st-distrib.zip && \
+    ((tail -F /root/Axway/install.log &) ; \
+    ./setup.sh -s $PWD/axway_installer.properties) && \
+    rm -rf /root/tmp
 
 WORKDIR $ST_HOME
 COPY build/scripts $ST_HOME/docker_scripts/

@@ -10,7 +10,7 @@ services:
       SSH_SERVICE_PORT: 22
 
   st-backend:
-    image: axway-docker-ci.bintray.io/st/backend:$DOCKER_TAG
+    image: st/backend:$DOCKER_TAG
     environment:
       ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-core-license.txt"
       ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-feature-license.txt"

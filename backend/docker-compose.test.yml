@@ -5,13 +5,15 @@ services:
     depends_on:
     - st-backend
     environment:
-      ST_FQDN: st-backend
+      ST_ADMIN_UI_URI: "st-backend:444"
+      ST_HOST: "st-backend"
+      SSH_SERVICE_PORT: 22
 
   st-backend:
-    image: st/backend:$DOCKER_TAG
+    image: axway-docker-ci.bintray.io/st/backend:$DOCKER_TAG
     environment:
-      ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/5.5.0/st-core-license.txt"
-      ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/5.5.0/st-feature-license.txt"
+      ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-core-license.txt"
+      ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-feature-license.txt"
       ST_GLOBAL_CONFIG_PATH: /run/secrets/st-be-services-config-file
       START_SCRIPTS_CONF_PATH: /run/secrets/st-be-services-jvm-config-file
       ST_CA_PATH: /run/secrets/st-root-ca.crt

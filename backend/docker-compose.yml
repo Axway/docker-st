@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   st-backend:
-    image: axway-docker-ci.bintray.io/st/backend
+    image: registry.hub.docker.com/axway/st-backend
     environment:
       ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-core-license.txt"
       ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-feature-license.txt"

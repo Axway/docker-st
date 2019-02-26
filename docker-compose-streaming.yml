@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   st-edge:
-    image: axway-docker-ci.bintray.io/st/edge
+    image: registry.hub.docker.com/axway/st-edge
     environment:
       ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-core-license.txt"
       ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-feature-license.txt"
@@ -35,7 +35,7 @@ services:
     - "19627:19627"  # PESIT-pTCP-SSL
 
   st-backend:
-    image: axway-docker-ci.bintray.io/st/backend
+    image: registry.hub.docker.com/axway/st-backend
     environment:
       ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-core-license.txt"
       ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-feature-license.txt"

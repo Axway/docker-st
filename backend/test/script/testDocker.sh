@@ -14,7 +14,7 @@ CERT_JSON_PM_PATH="meta-data=@certJsonPM.json;type=application/json"
 SSH_SERVICE_PORT=${ST_SSH_SERVICE_PORT:-22}
 
 # Initial CURL that waits for the admin ui
-curl  -kvvv  --connect-timeout 5 --max-time 10 --retry 50 --retry-delay 10 --retry-max-time 120  --retry-connrefused 'https://'${ADMIN_CREDENTIAL}''${ST_ADMIN_UI_URI}''
+curl  -kvvv  --connect-timeout 5 --max-time 10 --retry 50 --retry-delay 10 --retry-max-time 120  --retry-connrefused 'https://'${ADMIN_CREDENTIAL}''${ADMIN_UI_URI}''
 
 # Create user account on PM
 echo --------------------------

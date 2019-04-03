@@ -1,0 +1,43 @@
+{
+   "zones":[
+      {
+         "zone":{
+            "name":"Edge",
+            "description":"Zone for the Demo EDGE",
+            "isDnsResolutionEnabled":false,
+            "isDefault":false,
+            "edges":[
+               {
+                  "edge":{
+                     "title":"st-edge",
+                     "enabledProxy":false,
+                     "protocols":[
+                        {
+                           "protocol":{
+                              "streaming_protocol":"SSH",
+                              "port":20022,
+                              "isEnabled":true,
+                              "ssl_alias":"dockerd"
+                           }
+                        },
+                        {
+                           "protocol":{
+                              "streaming_protocol":"HTTP",
+                              "port":20080,
+                              "isEnabled":true,
+                              "ssl_alias":"dockerd"
+                           }
+                        }
+                     ],
+                     "ip_address":[
+                        {
+                           "ipAddress":"st-edge"
+                        }
+                     ]
+                  }
+               }
+            ]
+         }
+      }
+   ]
+}

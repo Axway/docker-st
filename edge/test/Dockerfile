@@ -1,5 +1,5 @@
 FROM alpine:latest
-RUN apk add --no-cache curl
-COPY test.sh .
-ENV ST_FQDN 127.0.0.1
-CMD [ "./test.sh" ]
+RUN apk add --no-cache curl openssh-client expect
+COPY script/ /script/
+WORKDIR /script/
+CMD [ "/bin/sh","-c", "./testDocker.sh" ]

@@ -5,11 +5,11 @@
 - Docker version >= 17.11
 - Docker-compose version >= 1.17.0
 
-#### Basic Configuration through environment variables 
+#### Basic parameters are configurable through environment variables and files
 
-Most of the ST's Server Configuration, related to the various services, has been exposed and can be changed via a file. You can specify which service must be started when the container starts, which port to listen to, the certificate alias, cipher suites, etc. In order to supply the file to ST one needs to create a docker secret and set **ST_GLOBAL_CONFIG_PATH** environment variable to specify it's location inside the container.
+Most of the ST's Server Configuration, related to the various services, has been exposed and can be changed via a file. You can specify which services must be started when the container starts, which port(s) to listen to, the certificate alias, cipher suites, etc. In order to supply the file to ST one needs to create a docker secret and set **ST_GLOBAL_CONFIG_PATH** environment variable to specify it's location inside the container.
 
-An example is available here [STGlobalConfig.properties .](resources/standalone/STGlobalConfig.properties)
+An example is available here [STGlobalConfig.properties .](backend/runtime/standalone/STGlobalConfig.properties)
 
 ```
 Ssh.Enable=true
@@ -40,7 +40,7 @@ As with the basic configuration file, the certificates must be supplied using a 
 
 The JVM MIN/MAX memory paramteres for each service are configurable via file that is supplied to ST using docker secrets and environment variable (see docker-compose.yml above).
 
-The format of the file ([STStartScriptsConfig](resources/standalone/STStartScriptsConfig)) is very simple:
+The format of the file ([STStartScriptsConfig](backend/runtime/standalone/STStartScriptsConfig)) is very simple:
 
 ```
 # Start scripts configuration should be specified here in the following format:
@@ -61,6 +61,38 @@ ADMIN_JAVA_MEM_MAX=128M
 PESIT_JAVA_MEM_MIN=128M
 PESIT_JAVA_MEM_MAX=128M
 ```
+
+#### Configuration enables composition with other services or products
+
+A lot of the ST fuctionality can be configured using the ST REST API. You can write a custom shell script that can be executed as part of the normal ST startup procedure that will perform additional configuration of ST using the REST API.
+
+The script must be made available inside the container as a docker secret and it's location must be specified using the following environment variable: **SETUP_EXTERNAL_SERVICES_PATH**. You can find an example script, that is used to configure Sentinel (on the ST Backend) and setup streaming between the Edge and Backend, here: ([setup_external_services.sh](backend/runtime/setup_external_services.sh)).
+
+When the **SETUP_EXTERNAL_SERVICES_PATH** has been set and it points to an executable file, the ST startup procedure will start the DB and Admin and will wait for the Admin to start before proceeding with executing the script and starting the rest of the services. This change of the flow is mostly required for the Streaming setup.
+
+##### Sentinel
+
+Sentinel can be configured using the [setup_external_services.sh](backend/runtime/setup_external_services.sh). The script expects to find the JSON file, containing the sentinel configuration, in the **ST_SENTINEL_CONFIG_PATH** environment variable (example: [SentinelConfig.json](backend/runtime/standalone/SentinelConfig.json)).
+
+##### ST Streaming 
+
+Setting up Streaming between the ST Edge and Backend requires several things:
+- Importing Certificates for the Streaming servers (EDGE) and Streaming Client (Backend) signed by the same CA (the ST_CA_* and ST_CERT_* variables are used for this - see above)
+- Updating the "Private" network zone on the ST Edge to specify that the streaming servers for the individual protocol services should bind to 0.0.0.0, and (optionally) set ssl alias
+- Creating a new Network Zone on the Backend that points to Edge
+- Setting "Streaming.TrustedAliases" Server Configuration option to point the the CA certificate used to sing the Streaming certificates
+
+The first part (Importing Certificates) is covered in  [basic-configuration-through-environment-variables](#basic-configuration-through-environment-variables) section.
+Updating the Private Zone on the Edge and creating the new zone on the Backend is performed using the [setup_external_services.sh](backend/runtime/setup_external_services.sh) script by supplying the Network Zone definition in JSON format as a docker secret and then setting the value of the **ST_NETWORK_ZONES_CONFIG_PATH** variable to point the file.
+
+Examples:
+- Private Zone on the Edge - [NetworkZonePrivateConfig.json](edge/runtime/NetworkZonePrivateConfig.json)
+- Edge Zone on the Backend - [NetworkZoneEdgeConfig.json](backend/runtime/streaming/NetworkZoneEdgeConfig.json)
+
+Last but not least the "Streaming.TrustedAliases" Server Configuration option is set by creating an "options-overwrite" file that must be supplied inside the contaiiner and its location must be set using **ST_OPTIONS_OVERWRITE_CONF_PATH** environment variable.
+
+The following docker-compose file has all this configured - [docker-compose-streaming.yml](docker-compose-streaming.yml).
+
 #### The application should log everything to stdout/stderr
 
 By default ST keeps its Server Log inside the embedded MySQL database. This will remain like this because the Server Log data is used together with the File Tracking information to help the ST administrator in debugging failed transfers (i.e. the data in the File Tracking tables has links to the data in the Server Log tables).
@@ -109,3 +141,4 @@ Stop the containers using the following command (from the folder where docker-co
 | ST_CERT_PATH | The location inside the container of the Local Certificate (PKCS#12) that must be imported in ST Local Certificates store |
 | ST_CERT_PASS | The password of the PKCS#12 local certificate |
 | ST_CERT_ALIAS | The alias of the local certificate |
+| SETUP_EXTERNAL_SERVICES_PATH | The location inside the container of the custom script that configures ST features using the ST REST API |

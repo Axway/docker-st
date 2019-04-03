@@ -1,13 +1,15 @@
 version: "3.4"
 services:
   st-backend:
-    image: registry.hub.docker.com/axway/st-backend
+    image: st/backend:$DOCKER_TAG
+#    command: "sleep"
     environment:
       ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-core-license.txt"
       ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-feature-license.txt"
       ST_GLOBAL_CONFIG_PATH: /run/secrets/st-be-services-config-file
       START_SCRIPTS_CONF_PATH: /run/secrets/st-be-services-jvm-config-file
-      SETUP_EXTERNAL_SERVICES_PATH: /run/secrets/st-be-setup-external-services.sh
+      SETUP_EXTERNAL_SERVICES_PATH: /run/secrets/st-be-setup-external-services.sh 
+      ST_SENTINEL_CONFIG_PATH: "/run/secrets/st-be-sentinel-config-file"
       ST_CA_PATH: /run/secrets/st-root-ca.crt
       ST_CA_ALIAS: docker_ca
       ST_CERT_PATH: /run/secrets/st-be-services-crt.p12
@@ -18,6 +20,7 @@ services:
     - st-be-services-config-file
     - st-be-setup-external-services.sh
     - st-be-services-jvm-config-file
+    - st-be-sentinel-config-file
     - st-root-ca.crt
     - st-be-services-crt.p12
     ports:
@@ -38,6 +41,8 @@ secrets:
     file: runtime/standalone/STStartScriptsConfig
   st-be-setup-external-services.sh:
     file: runtime/setup_external_services.sh
+  st-be-sentinel-config-file:
+    file: runtime/standalone/SentinelConfig.json
   st-root-ca.crt:
     file: runtime/certs/ST_DOCKER_CA.crt
   st-be-services-crt.p12:

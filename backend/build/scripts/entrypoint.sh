@@ -14,10 +14,11 @@ if [[ -n "$ST_FEATURE_LICENSE" ]];then
    echo "$($ST_FEATURE_LICENSE)" > ./conf/st.license
 fi
 
+# Overlay2 workaround for Mysql: https://github.com/docker/for-linux/issues/72
+find $ST_HOME/var/db/mysql/ -type f -exec touch {} \;
+
 if [[ "$1" = 'sleep' ]]; then
    exec tail -f /dev/null
 else
-   # Overlay2 workaround for Mysql: https://github.com/docker/for-linux/issues/72
-   find $ST_HOME/var/db/mysql/ -type f -exec touch {} \;
    exec $ST_HOME/bin/start_$1 -trap
 fi

@@ -1,7 +1,7 @@
 FROM centos:7 as base_image
 RUN yum update -y && \
     yum install -y which perl perl-Data-Dumper glibc.i686 libgcc.i686 libstdc++.i686 zlib.i686 libaio.i686 compat-libstdc++-33 libaio numactl-libs &&\
-    yum install -y net-tools unzip bc java iproute &&\
+    yum install -y net-tools unzip bc iproute wget &&\
     yum reinstall -y glibc-common &&\
     package-cleanup --dupes && package-cleanup --cleandupes &&\
     yum clean all && rm -rf /var/cache/yum
@@ -14,8 +14,8 @@ WORKDIR /root/tmp
 COPY build/axway_installer.properties .
 COPY build/st_install.properties .
 
-ARG VERSION_BASE="5.5_Q4_2018"
-ARG RELEASE_BASE="BN620"
+ARG VERSION_BASE="5.5_Q1_2019"
+ARG RELEASE_BASE="BN833"
 ARG STATIC_BASE="SecureTransport_${VERSION_BASE}_Install_linux-x86-64_${RELEASE_BASE}.zip"
 
 ARG URL_BASE="https://axway.bintray.com/delivery/"

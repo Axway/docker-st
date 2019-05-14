@@ -1,6 +1,6 @@
-### Secure Transport
+# Secure Transport
 
-#### Prerequisites
+## Prerequisites
 
 - Docker version >= 17.11
 - Docker-compose version >= 1.17.0
@@ -142,3 +142,11 @@ Stop the containers using the following command (from the folder where docker-co
 | ST_CERT_PASS | The password of the PKCS#12 local certificate |
 | ST_CERT_ALIAS | The alias of the local certificate |
 | SETUP_EXTERNAL_SERVICES_PATH | The location inside the container of the custom script that configures ST features using the ST REST API |
+
+## Copyright
+
+Copyright (c) 2019 Axway Software SA and its affiliates. All rights reserved.
+
+## License
+
+All files in this repository are licensed by Axway Software SA and its affiliates under the Apache License, Version 2.0, available at http://www.apache.org/licenses/.

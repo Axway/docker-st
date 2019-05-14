@@ -1,3 +1,7 @@
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright (c) 2019 Axway Software SA and its affiliates. All rights reserved.
+#
 FROM centos:7 as base_image
 RUN yum update -y && \
     yum install -y which perl perl-Data-Dumper glibc.i686 libgcc.i686 libstdc++.i686 zlib.i686 libaio.i686 compat-libstdc++-33 libaio numactl-libs &&\

@@ -1,6 +1,9 @@
 #!/bin/sh
 #
-# Copyright (c) Axway Software, 2018. All Rights Reserved.
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright (c) 2019 Axway Software SA and its affiliates. All rights reserved.
+#
 # admin-log4j.xml
 # NOTE: Assumes ST_HOME env variable is set
 

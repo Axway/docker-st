@@ -1,7 +1,9 @@
 #!/bin/sh
 #
-# Copyright (c) Axway Software, 2019. All Rights Reserved.
-# 
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright (c) 2019 Axway Software SA and its affiliates. All rights reserved.
+#
 # 1. Check if we are running the script on a backend
 # 1.1. If backend - configure Sentinel and Network zones if JSON files are provided
 # 1.2. If Edge - update Private Zone if JSON file provided

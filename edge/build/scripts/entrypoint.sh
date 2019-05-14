@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright (c) 2019 Axway Software SA and its affiliates. All rights reserved.
+#
 set -e
 
 if [[ $# -eq 0 ]] || [ $# -ne 1 ];then

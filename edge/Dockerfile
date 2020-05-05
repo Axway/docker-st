@@ -1,51 +1,74 @@
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 #
-# Copyright (c) 2019 Axway Software SA and its affiliates. All rights reserved.
+# Copyright (c) 2020 Axway Software SA and its affiliates. All rights reserved.
 #
-FROM centos:7 as base_image
+FROM registry.access.redhat.com/ubi8/ubi:8.0 as base_image
+
+LABEL maintainer="Axway Software SA <https://support.axway.com>"
+LABEL org.opencontainers.image.vendor="Axway"
+LABEL org.opencontainers.image.documentation="https://docs.axway.com/category/mft"
+LABEL org.opencontainers.image.title="SecureTransport Edge"
+LABEL org.opencontainers.image.description="SecureTransport Edge Image"
+LABEL org.opencontainers.image.url="https://git.ecd.axway.int/cloud/docker-st.git"
+LABEL org.opencontainers.image.source="git@git.ecd.axway.int:cloud/docker-st.git"
+LABEL org.opencontainers.image.documentation="https://docs.axway.com/category/mft"
+
+# Update Base OS Packages and Install pre-requisites
 RUN yum update -y && \
-    yum install -y which perl perl-Data-Dumper glibc.i686 libgcc.i686 libstdc++.i686 zlib.i686 libaio.i686 compat-libstdc++-33 libaio numactl-libs &&\
-    yum install -y net-tools unzip bc iproute wget &&\
-    yum reinstall -y glibc-common &&\
-    package-cleanup --dupes && package-cleanup --cleandupes &&\
-    yum clean all && rm -rf /var/cache/yum
+    yum install -y which procps glibc.i686 libgcc.i686 libstdc++.i686 zlib.i686 libaio.i686 libaio &&\
+    yum clean all &&\
+    rm -rf /var/cache/yum &&\
+    find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en_US' ! -name 'locale.alias' | xargs -r rm -r
 
-ENV ST_HOME=/root/Axway/SecureTransport
+# Add User
+RUN useradd -m -u 1001 -g 0 stuser && mkdir /home/stuser/tmp && chown stuser:0 /home/stuser/tmp
 
+# Set Environment Variables
+ENV ST_HOME=/home/stuser/Axway/SecureTransport LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8
+
+#######
+#
+# Intermediate Image: Product Installation
+#
+######
 FROM base_image as install_image
 
-WORKDIR /root/tmp
-COPY build/axway_installer.properties .
-COPY build/st_install.properties .
+RUN yum install -y perl unzip
 
-ARG VERSION_BASE="5.5_Q1_2019"
-ARG RELEASE_BASE="BN833"
-ARG STATIC_BASE="SecureTransport_${VERSION_BASE}_Install_linux-x86-64_${RELEASE_BASE}.zip"
+USER stuser
 
-ARG URL_BASE="https://axway.bintray.com/delivery/"
+WORKDIR /home/stuser/tmp
 
-RUN curl -kL $URL_BASE$STATIC_BASE -o st-distrib.zip && \
-    unzip st-distrib.zip && \
-    rm st-distrib.zip && \
-    ((tail -F /root/Axway/install.log &) ; \
-    ./setup.sh -s $PWD/axway_installer.properties) && \
-    rm -rf /root/tmp
+ARG INSTALL_KIT
 
-WORKDIR $ST_HOME
-COPY build/scripts $ST_HOME/docker_scripts/
+ADD --chown=stuser:0 $INSTALL_KIT installkit.zip
 
-# Enable Service Logging to Console
-RUN chmod +x $ST_HOME/docker_scripts/*.sh && \
-    $ST_HOME/docker_scripts/logger-util.sh && \
-    sed -i 's/\(>> "$CATALINA_BASE"\/logs\/catalina.out\)/#\1/' /root/Axway/SecureTransport/tomcat/bin/catalina.sh && \
-    sed -i '/org.apache.catalina.startup.Bootstrap "$@" start \\/ s/\\/ \&/' /root/Axway/SecureTransport/tomcat/bin/catalina.sh && \
-    sed -i '/com.tumbleweed.st.server.util.tomcat.As2ServerBootstrap "$@" start \\/ s/\\/ \&/' /root/Axway/SecureTransport/tomcat/bin/catalina.sh
+COPY --chown=stuser:0 build/ .
+COPY --chown=stuser:0 build/scripts/entrypoint.sh $ST_HOME/docker/scripts/ 
 
+# Do not install ST cron jobs
+ENV INSTALL_CRON=false
+
+# Perform silent installation
+RUN chmod +x $ST_HOME/docker/scripts/*.sh &&\
+    unzip installkit.zip &&\
+    rm -f installkit.zip &&\
+    ./setup.sh -s /home/stuser/tmp/axway_installer.properties
+
+# Fix catalina logging
+RUN scripts/logger-util.sh && sed -i 's/\(>> "$CATALINA_BASE"\/logs\/catalina.out\)/#\1/' $ST_HOME/tomcat/bin/catalina.sh && sed -i '/org.apache.catalina.startup.Bootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh && sed -i '/com.tumbleweed.st.server.util.tomcat.As2ServerBootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh
+
+######
+#W
+#
+#####
 FROM base_image
 
-COPY --from=install_image /root/Axway/ /root/Axway/
+COPY --chown=stuser:0 --from=install_image $ST_HOME $ST_HOME
+
+USER stuser
 
 WORKDIR $ST_HOME
 
-ENTRYPOINT [ "/root/Axway/SecureTransport/docker_scripts/entrypoint.sh" ]
-CMD [ "all" ]
+ENTRYPOINT [ "/home/stuser/Axway/SecureTransport/docker/scripts/entrypoint.sh" ]
+CMD ["all"]

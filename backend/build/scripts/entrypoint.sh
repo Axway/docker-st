@@ -12,18 +12,18 @@ if [[ $# -eq 0 ]] || [ $# -ne 1 ];then
 fi
 
 if [[ -n "$ST_CORE_LICENSE" ]];then
-   echo "$($ST_CORE_LICENSE)" > ./conf/filedrive.license
+   cp "$ST_CORE_LICENSE"  $ST_HOME/conf/st.license.tmp
+   mv -f $ST_HOME/conf/st.license.tmp $ST_HOME/conf/st.license
 fi
 
 if [[ -n "$ST_FEATURE_LICENSE" ]];then
-   echo "$($ST_FEATURE_LICENSE)" > ./conf/st.license
+   cp "$ST_FEATURE_LICENSE"  $ST_HOME/conf/filedrive.license.tmp
+   mv -f $ST_HOME/conf/filedrive.license.tmp $ST_HOME/conf/filedrive.license
 fi
-
-# Overlay2 workaround for Mysql: https://github.com/docker/for-linux/issues/72
-find $ST_HOME/var/db/mysql/ -type f -exec touch {} \;
 
 if [[ "$1" = 'sleep' ]]; then
    exec tail -f /dev/null
 else
+   $ST_HOME/bin/start_post_install.sh $ST_HOME/docker/conf
    exec $ST_HOME/bin/start_$1 -trap
 fi

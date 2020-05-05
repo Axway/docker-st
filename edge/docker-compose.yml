@@ -5,21 +5,14 @@
 version: "3.4"
 services:
   st-edge:
-    image: registry.hub.docker.com/axway/st-edge
+    image: st-edge
     environment:
-      ST_CORE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-core-license.txt"
-      ST_FEATURE_LICENSE: "curl http://dml.phx.axway.int/licenses/st/st-feature-license.txt"
-      ST_GLOBAL_CONFIG_PATH: /run/secrets/st-edge-services-config-file
-      ST_CA_PATH: /run/secrets/st-root-ca.crt
-      ST_CA_ALIAS: docker_ca
-      ST_CERT_PATH: /run/secrets/st-edge-services-crt.p12
-      ST_CERT_PASS: SECRET123
-      ST_CERT_ALIAS: dockerd
+      ST_CONTAINER_CONFIG_PATH: /run/secrets/
+      ST_CORE_LICENSE: /run/secrets/filedrive.license
+      ST_FEATURE_LICENSE: /run/secrets/st.license
+      ST_GLOBAL_CONFIG_PATH: /run/secrets/STGlobalConfig.properties
+      ST_START_SCRIPTS_CONF_PATH: /run/secrets/STStartScriptsConfig
     stop_grace_period: 2m
-    secrets:
-    - st-edge-services-config-file
-    - st-root-ca.crt
-    - st-edge-services-crt.p12
     ports:
     - "9444:444"     # ADMIN
     - "9021:21"      # FTP
@@ -34,11 +27,25 @@ services:
     - "19617:19617"  # PESIT-pTCP
     - "19627:19627"  # PESIT-pTCP-SSL
     - "9803:8003"    # DEBUG
+    secrets:
+      - STGlobalConfig.properties
+      - STStartScriptsConfig
+      - db.conf
+      - filedrive.license
+      - st.license
+      - taeh
 
 secrets:
-  st-edge-services-config-file:
-    file: runtime/STGlobalConfig.properties
-  st-root-ca.crt:
-    file: runtime/certs/ST_DOCKER_CA.crt
-  st-edge-services-crt.p12:
-    file: runtime/certs/ST_EDGE_CERT.p12
+  taeh:
+    file: runtime/secrets/taeh
+  STGlobalConfig.properties:
+    file: runtime/secrets/STGlobalConfig.properties
+  STStartScriptsConfig:
+    file: runtime/secrets/STStartScriptsConfig
+  db.conf:
+    file: runtime/secrets/db.conf
+  st.license:
+    file: runtime/secrets/st.license
+  filedrive.license:
+    file: runtime/secrets/filedrive.license
+    

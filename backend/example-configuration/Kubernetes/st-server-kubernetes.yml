@@ -73,7 +73,7 @@ spec:
       volumes:
       - name: secret-volume
         secret:
-          secretName: st-secret
+          secretName: st-server-secret
       - name: nfs-volume
         nfs:
           server: <ip-of-nfs-server>

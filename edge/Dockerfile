@@ -44,7 +44,7 @@ ARG INSTALL_KIT
 ADD --chown=stuser:0 $INSTALL_KIT installkit.zip
 
 COPY --chown=stuser:0 build/ .
-COPY --chown=stuser:0 build/scripts/entrypoint.sh $ST_HOME/docker/scripts/ 
+COPY --chown=stuser:0 build/scripts/entrypoint.sh $ST_HOME/docker/scripts/
 
 # Do not install ST cron jobs
 ENV INSTALL_CRON=false
@@ -56,10 +56,14 @@ RUN chmod +x $ST_HOME/docker/scripts/*.sh &&\
     ./setup.sh -s /home/stuser/tmp/axway_installer.properties
 
 # Fix catalina logging
-RUN scripts/logger-util.sh && sed -i 's/\(>> "$CATALINA_BASE"\/logs\/catalina.out\)/#\1/' $ST_HOME/tomcat/bin/catalina.sh && sed -i '/org.apache.catalina.startup.Bootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh && sed -i '/com.tumbleweed.st.server.util.tomcat.As2ServerBootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh
+RUN scripts/logger-util.sh && \
+    sed -i 's/\(>> "$CATALINA_BASE"\/logs\/catalina.out\)/#\1/' $ST_HOME/tomcat/bin/catalina.sh && \
+    sed -i '/org.apache.catalina.startup.Bootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh && \
+    sed -i '/com.tumbleweed.st.server.util.tomcat.As2ServerBootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh
 
 ######
-#W
+#
+# Final Image
 #
 #####
 FROM base_image

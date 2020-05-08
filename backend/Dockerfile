@@ -15,7 +15,7 @@ LABEL org.opencontainers.image.documentation="https://docs.axway.com/category/mf
 
 # Update Base OS Packages and Install pre-requisites
 RUN yum update -y && \
-    yum install -y which procps perl glibc.i686 libgcc.i686 libstdc++.i686 zlib.i686 libaio.i686 libaio unzip &&\
+    yum install -y which procps glibc.i686 libgcc.i686 libstdc++.i686 zlib.i686 libaio.i686 libaio &&\
     yum clean all &&\
     rm -rf /var/cache/yum &&\
     find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en_US' ! -name 'locale.alias' | xargs -r rm -r
@@ -33,6 +33,8 @@ ENV ST_HOME=/home/stuser/Axway/SecureTransport LC_ALL=en_US.UTF-8 LANG=en_US.UTF
 ######
 FROM base_image as install_image
 
+RUN yum install -y perl unzip
+
 USER stuser
 
 WORKDIR /home/stuser/tmp
@@ -48,7 +50,8 @@ COPY --chown=stuser:0 build/scripts/entrypoint.sh $ST_HOME/docker/scripts/
 ENV INSTALL_CRON=false
 
 # Perform silent installation
-RUN unzip installkit.zip &&\
+RUN chmod +x $ST_HOME/docker/scripts/*.sh &&\
+    unzip installkit.zip &&\
     rm -f installkit.zip &&\
     ./setup.sh -s /home/stuser/tmp/axway_installer.properties
 

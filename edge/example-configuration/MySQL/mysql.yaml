@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service-ssl
+  namespace: <namespace> # replace me
+  labels:
+    run: mysql-ssl
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: #add NodePort
+      protocol: TCP
+      name: admin
+  selector:
+    run: mysql-ssl
+---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: mysql-ssl
+      namespace: <namespace> # replace me
+      labels:
+        k8s-app: mysql-ssl
+        run: mysql-ssl
+    spec:
+      selector:
+        matchLabels:
+          run: mysql-ssl
+      template:
+        metadata:
+          labels:
+            run: mysql-ssl
+        spec:
+          containers:
+          - name: mysql-ssl
+            image: mysql:5.6.48
+            env:
+                - name: MYSQL_ROOT_PASSWORD
+                  value: "tumbleweed"
+            volumeMounts:
+                - name: nfs-volume
+                  mountPath: /var/lib/mysql
+                - name: secret-volume-certificates
+                  mountPath: /etc/certs
+                - name: secret-volume-config
+                  mountPath: /etc/mysql/conf.d
+          volumes:
+          - name: secret-volume-certificates
+            secret:
+              secretName: mysql-secret
+          - name: secret-volume-config
+            secret:
+              secretName: mysql-myconf
+          - name: nfs-volume
+            nfs:
+              server: <ip-of-nfs-server>
+              path: #absolute path on NFS server

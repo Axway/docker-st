@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: st-server
+  namespace: <namespace> # change with your namespace here
+  labels:
+    run: st-server
+spec:
+  clusterIP: None
+  ports:
+  - port: 8444
+    name: adminc
+    protocol: TCP
+  selector:
+    run: st-server
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: st-server
+  namespace: <namespace> # change with your namespace here
+spec:
+  serviceName: "st-server"
+  selector:
+    matchLabels:
+      run: st-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: st-server
+    spec:
+      containers:
+      - name: st-server
+        image: <st-server-image> # change with the image name in docker images
+        resources:
+          requests:
+            cpu: 4
+            memory: 8Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
+        readinessProbe:
+          exec:
+            command:
+            - /home/stuser/Axway/SecureTransport/bin/readiness_check.sh
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+            - /home/stuser/Axway/SecureTransport/bin/liveness_check.sh
+          initialDelaySeconds: 180
+          failureThreshold: 1
+          periodSeconds: 15
+        env:
+        - name: ST_CONTAINER_CONFIG_PATH
+          value: "/home/stuser/Axway/SecureTransport/docker/tmp"
+        - name: ST_CORE_LICENSE
+          value: "/home/stuser/Axway/SecureTransport/docker/tmp/st.license"
+        - name: ST_FEATURE_LICENSE
+          value: "/home/stuser/Axway/SecureTransport/docker/tmp/filedrive.license"
+        - name: ST_GLOBAL_CONFIG_PATH
+          value: /home/stuser/Axway/SecureTransport/docker/tmp/STGlobalConfig.properties
+        - name: ST_START_SCRIPTS_CONF_PATH
+          value: /home/stuser/Axway/SecureTransport/docker/tmp/STStartScriptsConfig
+        volumeMounts:
+        - name: secret-volume 
+          mountPath: "/home/stuser/Axway/SecureTransport/docker/tmp"
+          readOnly: true
+        - name: nfs-volume
+          mountPath: /home/stuser/shared
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: st-secret
+      - name: nfs-volume
+        nfs:
+          server: <ip-of-nfs-server>
+          path: <absolute-path-on-NFS-server> # Example /exports/exportedDirectory

@@ -23,7 +23,7 @@ The generated taeh is passed on startup of the container. The file must be prese
 
 Database configuration is performed via a file which is passed on startup of the container. The file must be present in the mounted directory in ST_CONTAINER_CONFIG_PATH.
 
-An example is available here [db.conf .](backend/runtime/secrets/db.conf or edge/runtime/secrets/db.conf).
+An example is available here [db.conf .](backend/runtime/secrets/db.conf).
 
 db.type= < Database Type: oracle, mssql or mysql >
 db.host= < The FQDN or IP address of the Database system or cluster >
@@ -40,7 +40,7 @@ db.certificate.path= < PEM or DER file, containing the trusted certificates need
 Most of the ST's Server Configuration, related to the various services, has been exposed and can be changed via a file. You can specify which services must be started when the container starts, which port(s) to listen to, the certificate alias, cipher suites, etc. In order to supply the file to ST one needs to create a docker/Kubernetes secret and set **ST_GLOBAL_CONFIG_PATH** environment variable to specify it's location inside the container.
 Note the file content is read and applied only when the database schema is created on the first ST container start. On any further starts the file will not be read and changes will not be applied.
 
-An example is available here [STGlobalConfig.properties .](backend/runtime/secrets/STGlobalConfig.properties or edge/runtime/secrets/STGlobalConfig.properties)
+An example is available here [STGlobalConfig.properties .](backend/runtime/secrets/STGlobalConfig.properties)
 
 ```
 Ssh.Enable=true
@@ -59,7 +59,7 @@ The above example enables the SSH service, enabled both SCP and SFTP, specifies 
 
 The JVM MIN/MAX memory paramteres for each service are configurable via file that is supplied to ST using docker/Kubernetes secrets and environment variable **ST_START_SCRIPTS_CONF_PATH** containing the path to the file.
 
-The format of the file ([STStartScriptsConfig](backend/runtime/secrets/STStartScriptsConfig) (edge/runtime/secrets/STStartScriptsConfig)) is very simple:
+The format of the file [STStartScriptsConfig](backend/runtime/secrets/STStartScriptsConfig) is very simple:
 {SERVICE}_JAVA_MEM_MIN
 {SERVICE}_JAVA_MEM_MAX
 {SERVICE}_JAVA_OPTS="<OPTIONS> ${JAVA_OPTS}"
@@ -89,6 +89,21 @@ SOCKS_JAVA_MEM_MAX=512M
 
 TM_JAVA_OPTS="-DStreaming.numberOfConnections=20 ${JAVA_OPTS}"
 ```
+
+#### Performance tuning
+
+Using configuration files performance tuning can be applied to the following files - configuration.xml options, hibernate-cache-config.xml, scheduler.properties, coherence-cache-config-tm.xml
+The hibernate-cache-config.xml, scheduler.properties, coherence-cache-config-tm.xml are replaced on container start overwriting the default files, if they are present in the **ST_CONTAINER_CONFIG_PATH** mounted secret volume. 
+Note: On ST edges only the hibernate-cache-config.xml is applicable and will be used.
+
+Before modifing the files you must obtain them from the docker image using the following command: 
+1. mkdir /tmp/secret_folder
+2. chmod 777 /tmp/secret_folder
+3. docker run --rm --entrypoint '' -v /tmp/secret_folder/:/tmp/secret_folder <st-image> /bin/bash -c 'cp $ST_HOME/conf/hibernate-cache-config.xml /tmp/secret_folder ; cp $ST_HOME/conf/scheduler.properties /tmp/secret_folder ; cp $ST_HOME/conf/coherence-cache-config-tm.xml /tmp/secret_folder'
+
+In order to perform changes to the configuration.xml options a file named [database_configuration_components.xml](backend/runtime/secrets/database_configuration_components.xml) must be present in the **ST_CONTAINER_CONFIG_PATH**.
+The options are supplied in key-value pair. If an option doesn't exist it will be added to the list of options of the specified component, if it is present, it's value will be changed.
+Valid components are: "Database", "Admin", "AS2", "SSHD", "FTPD", "HTTPD", "Tools", "Installer", "Pesit", "TransactionManager", "TransferLog", "ServerLog"
 
 #### The application should log everything to stdout/stderr
 
@@ -129,7 +144,7 @@ Note during the graceful shutdown of edge container, the number of containers ca
    1.1 For MySQL in docker example is provided in example-configuration/MySQL/
    1.2 Create secret containing the my.conf file `kubectl create secret generic mysql-config -n <st-namespace> --from-file=./my.cnf`
    1.3 Generate certificates for the MySQL database if SSL connection will be used.
-   1.4 Create secret for the certificates if SSL connection will be established with the database `kubectl create secret generic mysql-secret-certificates -n <namespace> --from-file=certs/ca-key.pem --from-file=certs/ca.pem --from-file=certs/client-cert.pem --from-file=certs/client-key.pem --from-file=certs/server-cert.pem --from-file=certs/server-key.pem`
+   1.4 Create secret for the certificates if SSL connection will be established with the database `kubectl create secret generic mysql-secret-certificates -n <namespace> --from-file=ca-key.pem --from-file=ca.pem --from-file=client-cert.pem --from-file=client-key.pem --from-file=server-cert.pem --from-file=server-key.pem`
    1.5 Deploy the database using the following command `kubectl create -f mysql.yaml`
 
 2) Configure the HaProxy from example-configuration/HaProxy:
@@ -150,7 +165,7 @@ Note during the graceful shutdown of edge container, the number of containers ca
    3.5 Optional - prepare STGlobalConfig.properties file. (Section Global configuration using STGlobalConfig.properties file) if used should be supplied in the Kubernetes secret in step 1.8 - add at the end of the command - `--from-file=./STGlobalConfig.properties`
    3.6 Optional - prepare STStartScriptsConfig file. (Section JVM Parameters for ST services using STStartScriptsConfig) if used should be supplied in the Kubernetes secret in step 1.8 - add at the end of the command `--from-file=./STStartScriptsConfig`
    3.7 Prepare ST feature and core licenses as per your database.
-   3.8 Create Kubernetes secret with the needed files (do not include STGlobalConfig.properties and STStartScriptsConfig if not used) - st-server-secret - `kubectl create secret generic st-server-secret --from-file=./taeh --from-file=./db.conf --from-file=./st.license --from-file=filedrive.license` (command should be executed where the files are located eg. runtime/secrets).
+   3.8 Create Kubernetes secret with the needed files (do not include STGlobalConfig.properties and STStartScriptsConfig if not used) - st-server-secret - `kubectl create secret generic st-server-secret --from-file=./taeh --from-file=./db.conf --from-file=./st.license --from-file=filedrive.license` (command should be executed where the files are located eg. runtime/secrets). If performance tunning is applied, the above mentioned files should be also added to the command (`--from-file=./database_configuration_components.xml --from-file=./hibernate-cache-config.xml --from-file=./scheduler.properties --from-file=./coherence-cache-config-tm.xml`)
    3.9 Fill the needed data in st-server-kubernetes.yml and st-edge-kubernetes.yml. (remove environement variables for STStartScriptsConfig and STGlobalConfig.properties if not used)
    3.10 Deploy the ST server - `kubectl create -f st-server-kubernetes.yml` (from the folder where st-server-kubernetes.yml file is located)
    3.11 Verify container is started - `kubectl get pods -n <st-namespace>`

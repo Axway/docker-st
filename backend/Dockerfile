@@ -9,9 +9,8 @@ LABEL org.opencontainers.image.vendor="Axway"
 LABEL org.opencontainers.image.documentation="https://docs.axway.com/category/mft"
 LABEL org.opencontainers.image.title="SecureTransport Server"
 LABEL org.opencontainers.image.description="SecureTransport Server Image"
-LABEL org.opencontainers.image.url="https://git.ecd.axway.int/cloud/docker-st.git"
-LABEL org.opencontainers.image.source="git@git.ecd.axway.int:cloud/docker-st.git"
-LABEL org.opencontainers.image.documentation="https://docs.axway.com/category/mft"
+LABEL org.opencontainers.image.url="https://github.com/Axway/docker-st.git"
+LABEL org.opencontainers.image.source="git@github.com:Axway/docker-st.git"
 
 # Update Base OS Packages and Install pre-requisites
 RUN yum update -y && \

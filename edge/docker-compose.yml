@@ -13,12 +13,12 @@ services:
       ST_START_SCRIPTS_CONF_PATH: /run/secrets/STStartScriptsConfig
     stop_grace_period: 2m
     ports:
-    - "9444:444"     # ADMIN
-    - "9021:21"      # FTP
+    - "9444:8444"     # ADMIN
+    - "9021:8021"      # FTP
     - "50000:50020"  # Passive FTP
-    - "9080:80"      # HTTP
-    - "9443:443"     # HTTPS
-    - "9022:22"      # SFTP/SCP
+    - "9080:8080"      # HTTP
+    - "9443:8443"     # HTTPS
+    - "9022:8022"      # SFTP/SCP
     - "10080:10080"  # AS2 HTTP
     - "10443:10443"  # AS2 HTTPs
     - "17617:17617"  # PESIT-TCP
@@ -32,7 +32,7 @@ services:
       - filedrive.license
       - st.license
       - taeh
-
+      
 secrets:
   taeh:
     file: runtime/secrets/taeh

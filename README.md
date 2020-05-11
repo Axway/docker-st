@@ -74,12 +74,12 @@ TM_JAVA_OPTS="-DStreaming.numberOfConnections=20 ${JAVA_OPTS}"
 
 Using configuration files performance tuning can be applied to the following files - configuration.xml options, hibernate-cache-config.xml, scheduler.properties, coherence-cache-config-tm.xml
 The hibernate-cache-config.xml, scheduler.properties, coherence-cache-config-tm.xml are replaced on container start overwriting the default files, if they are present in the **ST_CONTAINER_CONFIG_PATH** mounted secret volume. 
-Note: On ST edges only the hibernate-cache-config.xml is applicable and will be used.
+Note: On ST edges only the configuration.xml options can be applied. As no other tuning of the confiugration files is required.
 
 Before modifing the files you must obtain them from the docker image using the following command: 
 1. mkdir /tmp/secret_folder
 2. chmod 777 /tmp/secret_folder
-3. docker run --rm --entrypoint '' -v /tmp/secret_folder/:/tmp/secret_folder <st-image> /bin/bash -c 'cp $ST_HOME/conf/hibernate-cache-config.xml /tmp/secret_folder ; cp $ST_HOME/conf/scheduler.properties /tmp/secret_folder ; cp $ST_HOME/conf/coherence-cache-config-tm.xml /tmp/secret_folder'
+3. docker run --rm --entrypoint '' -v /tmp/secret_folder/:/tmp/secret_folder <st-server-image> /bin/bash -c 'cp $ST_HOME/conf/hibernate-cache-config.xml /tmp/secret_folder ; cp $ST_HOME/conf/scheduler.properties /tmp/secret_folder ; cp $ST_HOME/conf/coherence-cache-config-tm.xml /tmp/secret_folder'
 
 In order to perform changes to the configuration.xml options a file named [database_configuration_components.xml](backend/runtime/secrets/database_configuration_components.xml) must be present in the **ST_CONTAINER_CONFIG_PATH**.
 The options are supplied in key-value pair. If an option doesn't exist it will be added to the list of options of the specified component, if it is present, it's value will be changed.

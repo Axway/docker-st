@@ -51,6 +51,7 @@ ENV INSTALL_CRON=false
 
 # Perform silent installation
 RUN chmod +x $ST_HOME/docker/scripts/*.sh &&\
+    chmod +x scripts/*.sh &&\
     unzip installkit.zip &&\
     rm -f installkit.zip &&\
     ./setup.sh -s /home/stuser/tmp/axway_installer.properties

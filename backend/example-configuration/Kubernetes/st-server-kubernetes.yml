@@ -33,6 +33,7 @@ spec:
       containers:
       - name: st-server
         image: <st-server-image> # change with the image name in docker images
+        imagePullPolicy: Never # if using Docker registry delete this line
         resources:
           requests:
             cpu: 4
@@ -60,8 +61,6 @@ spec:
           value: "/home/stuser/Axway/SecureTransport/docker/tmp/st.license"
         - name: ST_FEATURE_LICENSE
           value: "/home/stuser/Axway/SecureTransport/docker/tmp/filedrive.license"
-        - name: ST_GLOBAL_CONFIG_PATH
-          value: /home/stuser/Axway/SecureTransport/docker/tmp/STGlobalConfig.properties
         - name: ST_START_SCRIPTS_CONF_PATH
           value: /home/stuser/Axway/SecureTransport/docker/tmp/STStartScriptsConfig
         volumeMounts:

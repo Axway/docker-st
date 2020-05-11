@@ -10,7 +10,6 @@ services:
       ST_CONTAINER_CONFIG_PATH: /run/secrets/
       ST_CORE_LICENSE: /run/secrets/filedrive.license
       ST_FEATURE_LICENSE: /run/secrets/st.license
-      ST_GLOBAL_CONFIG_PATH: /run/secrets/STGlobalConfig.properties
       ST_START_SCRIPTS_CONF_PATH: /run/secrets/STStartScriptsConfig
     stop_grace_period: 2m
     ports:
@@ -28,7 +27,6 @@ services:
     - "19627:19627"  # PESIT-pTCP-SSL
     - "9803:8003"    # DEBUG
     secrets:
-      - STGlobalConfig.properties
       - STStartScriptsConfig
       - db.conf
       - filedrive.license
@@ -38,8 +36,6 @@ services:
 secrets:
   taeh:
     file: runtime/secrets/taeh
-  STGlobalConfig.properties:
-    file: runtime/secrets/STGlobalConfig.properties
   STStartScriptsConfig:
     file: runtime/secrets/STStartScriptsConfig
   db.conf:

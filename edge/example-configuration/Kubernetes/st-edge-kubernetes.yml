@@ -53,6 +53,7 @@ spec:
       containers:
       - name: st-edge
         image: <st-edge-image>
+        imagePullPolicy: Never # if using Docker registry delete this line
         resources:
           requests:
             cpu: 4
@@ -66,7 +67,7 @@ spec:
             - /home/stuser/Axway/SecureTransport/bin/readiness_check.sh
           initialDelaySeconds: 10
           periodSeconds: 20
-         livenessProbe:
+        livenessProbe:
           exec:
             command:
             - /home/stuser/Axway/SecureTransport/bin/liveness_check.sh
@@ -80,8 +81,6 @@ spec:
           value: "/home/stuser/Axway/SecureTransport/docker/tmp/st.license"
         - name: ST_FEATURE_LICENSE
           value: "/home/stuser/Axway/SecureTransport/docker/tmp/filedrive.license"
-        - name: ST_GLOBAL_CONFIG_PATH
-          value: /home/stuser/Axway/SecureTransport/docker/tmp/STGlobalConfig.properties
         - name: ST_START_SCRIPTS_CONF_PATH
           value: /home/stuser/Axway/SecureTransport/docker/tmp/STStartScriptsConfig
         volumeMounts:
@@ -91,4 +90,4 @@ spec:
       volumes:
       - name: secret-volume
         secret:
-          secretName: st-secret
+          secretName: st-edge-secret

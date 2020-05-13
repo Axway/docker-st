@@ -6,46 +6,46 @@ The repository contains the Docker files and configuration files needed for Secu
 
 The structure of the repository is:\
 SecureTransport Server files:\
-   [server](server)/\
-      [Dockerfile](server/Dockerfile) - The Dockerfile of the SecureTransport Server\
-      [docker-compose.yml](server/docker-compose.yml) - The docker-compose file for deployment of SecureTransport Server docker image\
-      [build](server/build)/\
-         [scripts](server/build/scripts)/ - The needed scripts in order to build SecureTransport Server docker image\
-            [entrypoint.sh](server/build/scripts/entrypoint.sh) - Script used as entrypoint in the container\
-            [logger-util.sh](server/build/scripts/logger-util.sh) - Script used to correct SecureTransport stdout apenders\
-         [axway_installer.properties](server/build) - File used for installation\
-         [st_install.properties](server/build) - File used for installtion\
-      [example-configuration](server/example-configuration)/\
-         [HaProxy](server/example-configuration/HaProxy)/\
-            [haproxy.cfg](server/example-configuration/HaProxy/haproxy.cfg) - HaProxy configuration file\
-            [haproxy.yaml](server/example-configuration/HaProxy/haproxy.yaml) - HaProxy Kubernetes configuration\
-         [Kubernetes](server/example-configuration/Kubernetes)/\
-            [st-server-kubernetes.yml](server/example-configuration/Kubernetes/st-server-kubernetes.yml) - SecureTransport Server Statefulset and Headless service Kubernetes configuration\
+  [server](server)/\
+    [Dockerfile](server/Dockerfile) - The Dockerfile of the SecureTransport Server\
+    [docker-compose.yml](server/docker-compose.yml) - The docker-compose file for deployment of SecureTransport Server docker image\
+    [build](server/build)/\
+      [scripts](server/build/scripts)/ - The needed scripts in order to build SecureTransport Server docker image\
+        [entrypoint.sh](server/build/scripts/entrypoint.sh) - Script used as entrypoint in the container\
+        [logger-util.sh](server/build/scripts/logger-util.sh) - Script used to correct SecureTransport stdout apenders\
+      [axway_installer.properties](server/build) - File used for installation\
+      [st_install.properties](server/build) - File used for installtion\
+    [example-configuration](server/example-configuration)/\
+      [HaProxy](server/example-configuration/HaProxy)/\
+        [haproxy.cfg](server/example-configuration/HaProxy/haproxy.cfg) - HaProxy configuration file\
+        [haproxy.yaml](server/example-configuration/HaProxy/haproxy.yaml) - HaProxy Kubernetes configuration\
+      [Kubernetes](server/example-configuration/Kubernetes)/\
+        [st-server-kubernetes.yml](server/example-configuration/Kubernetes/st-server-kubernetes.yml) - SecureTransport Server Statefulset and Headless service Kubernetes configuration\
 SecureTransport Edge files:\
-   [edge](edge)/\
-      [Dockerfile](edge/Dockerfile) - The Dockerfile of the SecureTransport Edge\
-      [docker-compose.yml](edge/docker-compose.yml) - The docker-compose file for deployment of SecureTransport Edge docker image\
-      [build](edge/build)/\
-         [scripts](edge/build/scripts)/ - The needed scripts in order to build SecureTransport Server docker image\
-            [entrypoint.sh](edge/build/scripts/entrypoint.sh) - Script used as entrypoint in the container\
-            [logger-util.sh](edge/build/scripts/logger-util.sh.sh) - Script used to correct SecureTransport stdout apenders\
-         [axway_installer.properties](edge/build/axway_installer.properties) - File used for installation\
-         [st_install.properties](edge/build/st_install.properties) - File used for installtion\
-      [example-configuration](edge/example-configuration)/\
-         [HaProxy](edge/example-configuration/HaProxy)/\
-            [streaming](edge/example-configuration/HaProxy/streaming)/\
-               [haproxy.cfg](edge/example-configuration/HaProxy/streaming/haproxy.cfg) - HaProxy configuration file\
-               [haproxy.yaml](edge/example-configuration/HaProxy/streaming/haproxy.yaml) - HaProxy Kubernetes configuration\
-            [client](edge/example-configuration/HaProxy)/\
-               [haproxy.cfg](edge/example-configuration/HaProxy/client/haproxy.cfg) - HaProxy configuration file\
-               [haproxy.yaml](edge/example-configuration/HaProxy/client/haproxy.yaml) - HaProxy Kubernetes configuration\
-            [onPremises](edge/example-configuration/HaProxy)/\
-               [haproxy.cfg](edge/example-configuration/HaProxy/onPremises/haproxy.cfg) - HaProxy configuration file\
-         [Kubernetes](edge/example-configuration/Kubernetes)/\
-            [st-edge-kubernetes.yml](edge/example-configuration/Kubernetes/st-edge-kubernetes.yml) - SecureTransport Edge Statefulset and services Kubernetes configuration\
-         [MySQL](edge/example-configuration/MySQL)/\
-            [my.cnf](edge/example-configuration/MySQL/my.cnf) - The MySQL database configuration\
-            [mysql.yaml](edge/example-configuration/MySQL/mysql.yaml) - The MySQL Kubernetes configuration file\
+  [edge](edge)/\
+    [Dockerfile](edge/Dockerfile) - The Dockerfile of the SecureTransport Edge\
+    [docker-compose.yml](edge/docker-compose.yml) - The docker-compose file for deployment of SecureTransport Edge docker image\
+    [build](edge/build)/\
+      [scripts](edge/build/scripts)/ - The needed scripts in order to build SecureTransport Server docker image\
+        [entrypoint.sh](edge/build/scripts/entrypoint.sh) - Script used as entrypoint in the container\
+        [logger-util.sh](edge/build/scripts/logger-util.sh.sh) - Script used to correct SecureTransport stdout apenders\
+      [axway_installer.properties](edge/build/axway_installer.properties) - File used for installation\
+      [st_install.properties](edge/build/st_install.properties) - File used for installtion\
+    [example-configuration](edge/example-configuration)/\
+      [HaProxy](edge/example-configuration/HaProxy)/\
+        [streaming](edge/example-configuration/HaProxy/streaming)/\
+          [haproxy.cfg](edge/example-configuration/HaProxy/streaming/haproxy.cfg) - HaProxy configuration file\
+          [haproxy.yaml](edge/example-configuration/HaProxy/streaming/haproxy.yaml) - HaProxy Kubernetes configuration\
+        [client](edge/example-configuration/HaProxy)/\
+          [haproxy.cfg](edge/example-configuration/HaProxy/client/haproxy.cfg) - HaProxy configuration file\
+          [haproxy.yaml](edge/example-configuration/HaProxy/client/haproxy.yaml) - HaProxy Kubernetes configuration\
+        [onPremises](edge/example-configuration/HaProxy)/\
+          [haproxy.cfg](edge/example-configuration/HaProxy/onPremises/haproxy.cfg) - HaProxy configuration file\
+      [Kubernetes](edge/example-configuration/Kubernetes)/\
+        [st-edge-kubernetes.yml](edge/example-configuration/Kubernetes/st-edge-kubernetes.yml) - SecureTransport Edge Statefulset and services Kubernetes configuration\
+      [MySQL](edge/example-configuration/MySQL)/\
+        [my.cnf](edge/example-configuration/MySQL/my.cnf) - The MySQL database configuration\
+        [mysql.yaml](edge/example-configuration/MySQL/mysql.yaml) - The MySQL Kubernetes configuration file\
 
 # Deployment procedure
 

@@ -12,13 +12,11 @@ if [[ $# -eq 0 ]] || [ $# -ne 1 ];then
 fi
 
 if [[ -n "$ST_CORE_LICENSE" ]];then
-   cp "$ST_CORE_LICENSE"  $ST_HOME/conf/st.license.tmp
-   mv -f $ST_HOME/conf/st.license.tmp $ST_HOME/conf/st.license
+   cp "$ST_CORE_LICENSE"  $ST_HOME/conf/st.license
 fi
 
 if [[ -n "$ST_FEATURE_LICENSE" ]];then
-   cp "$ST_FEATURE_LICENSE"  $ST_HOME/conf/filedrive.license.tmp
-   mv -f $ST_HOME/conf/filedrive.license.tmp $ST_HOME/conf/filedrive.license
+   cp "$ST_FEATURE_LICENSE"  $ST_HOME/conf/filedrive.license
 fi
 
 if [[ "$1" = 'sleep' ]]; then

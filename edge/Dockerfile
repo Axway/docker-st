@@ -59,7 +59,8 @@ RUN chmod +x $ST_HOME/docker/scripts/*.sh &&\
 RUN scripts/logger-util.sh && \
     sed -i 's/\(>> "$CATALINA_BASE"\/logs\/catalina.out\)/#\1/' $ST_HOME/tomcat/bin/catalina.sh && \
     sed -i '/org.apache.catalina.startup.Bootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh && \
-    sed -i '/com.tumbleweed.st.server.util.tomcat.As2ServerBootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh
+    sed -i '/com.tumbleweed.st.server.util.tomcat.As2ServerBootstrap "$@" start \\/ s/\\/ \&/' $ST_HOME/tomcat/bin/catalina.sh && \
+    rm -rf /home/stuser/tmp
 
 ######
 #

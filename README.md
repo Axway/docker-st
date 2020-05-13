@@ -5,6 +5,7 @@ The repository contains the Docker files and configuration files needed for Secu
 #### Contents
 
 The structure of the repository is:\
+```
 SecureTransport Server files:\
   [server](server)/\
     [Dockerfile](server/Dockerfile) - The Dockerfile of the SecureTransport Server\
@@ -46,7 +47,7 @@ SecureTransport Edge files:\
       [MySQL](edge/example-configuration/MySQL)/\
         [my.cnf](edge/example-configuration/MySQL/my.cnf) - The MySQL database configuration\
         [mysql.yaml](edge/example-configuration/MySQL/mysql.yaml) - The MySQL Kubernetes configuration file\
-
+```
 # Deployment procedure
 
 More information on how to build custom images and deploy SecureTransport in docker can be found in [SecureTransport_5.5_Containerized_Deployment_Guide_allOS_en_HTML5](https://linkzaguide-a.com)

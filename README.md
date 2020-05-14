@@ -2,11 +2,13 @@
 
 The repository contains the Dockerfiles and related scripts to build the Amplify SecureTransport Server and Edge Docker Images. 
 
-You can find more information about building the Docker images, deploying them in Kubernetes, and much more in the dedicated guide - [SecureTransport_5.5_Containerized_Deployment_Guide_allOS_en_HTML5](https://linkzaguide-a.com)
+# Production Deployment Guide
+
+More information about building and deploying the Docker images can be found in the dedicated guide - [SecureTransport_5.5_Containerized_Deployment_Guide_allOS_en_HTML5](https://linkzaguide-a.com)
 
 # Quick start using docker-compose
 
-Despite it is not the official deployment mechanism, SecureTransport can be deployed using docker-compose following the below steps:
+SecureTransport can be deployed using docker-compose for demo purposes:
 
 1) Download the SecureTransport Server/Edge Docker image from [Axway Support](https://support.axway.com/).
 

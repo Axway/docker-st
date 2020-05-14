@@ -20,9 +20,9 @@ From the folder where the docker image is located, run the command:
     docker load -i <Secure-Transport-image>.tar.gz
 ```
 
-#### Environemnt Variable Parameters
+#### E  nvironment Variable Parameters
 
-The following environment variables must be present in the docker-compose.yml file. Only ST_START_SCRIPTS_CONF_PATH is options variable.
+The following environment variables must be present in the docker-compose.yml file. Only ST_START_SCRIPTS_CONF_PATH is optional variable.
 
 |          Parameter         |                                                                              Description                                                                          |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -37,7 +37,7 @@ The following environment variables must be present in the docker-compose.yml fi
 
 1) Obtain your licenses from [Axway Support](https://support.axway.com/).
 
-2) Place them in the respective files [filedrive.license](runtime/secrets/filedrive.license) and [st.license](runtime/secrets/st.license).
+2) Place them in the respective files [filedrive.license](server/runtime/secrets/filedrive.license) and [st.license](server/runtime/secrets/st.license).
 
 3) Generate taeh file and encrypt the database password using the following commands:
 
@@ -45,11 +45,11 @@ The following environment variables must be present in the docker-compose.yml fi
 $ mkdir /tmp/secret_folder
 $ chmod 777 /tmp/secret_folder
 $ touch /tmp/secret_folder/pass # Еdit the /tmp/secret_folder/pass file to contain the Database password.
-$ Execute the following command - docker run --rm --entrypoint '' -v /tmp/secret_folder/:/tmp/secret_folder <st-image> /bin/bash -c '$ST_HOME/bin/createTaehFile /tmp/secret_folder ; cp /tmp/secret_folder/taeh $ST_HOME/bin/taeh ; $ST_HOME/bin/utils/aesenc "$(< /tmp/secret_folder/pass)" > /tmp/secret_folder/encpass'
+$ docker run --rm --entrypoint '' -v /tmp/secret_folder/:/tmp/secret_folder <st-image> /bin/bash -c '$ST_HOME/bin/createTaehFile /tmp/secret_folder ; cp /tmp/secret_folder/taeh $ST_HOME/bin/taeh ; $ST_HOME/bin/utils/aesenc "$(< /tmp/secret_folder/pass)" > /tmp/secret_folder/encpass'
 ```
-Place the taeh file in [runtime/secrets](runtime/secrets) and store the value of the encrypted database password for later usage located in encpass file.
+Place the taeh file in [server/runtime/secrets](server/runtime/secrets) and store the value of the encrypted database password for later usage located in encpass file.
 
-4) Populate the [db.conf](runtime/secrets/db.conf) file with the database information. The encrypted password from the previous step must be used. Note if certificate is used for the database connection it must be present in the same location where ST_START_SCRIPTS_CONF_PATH is mounted.
+4) Populate the [db.conf](server/runtime/secrets/db.conf) file with the database information. The encrypted password from the previous step must be used. Note if certificate is used for the database connection it must be present in the same location where ST_START_SCRIPTS_CONF_PATH is mounted.
 
 5) Start Secure Transport, run (from the folder where docker-compose.yml file is located)
 

@@ -4,7 +4,7 @@ The repository contains the Dockerfiles and related scripts to build the Amplify
 
 # Production Deployment Guide
 
-More information about building and deploying the Docker images can be found in the dedicated guide - [SecureTransport_5.5_Containerized_Deployment_Guide_allOS_en_HTML5](https://linkzaguide-a.com)
+More information about building and deploying the Docker images - [SecureTransport_5.5_Containerized_Deployment_Guide_allOS_en_HTML5](https://linkzaguide-a.com)
 
 # Quick start using docker-compose
 

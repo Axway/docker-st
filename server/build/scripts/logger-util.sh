@@ -13,6 +13,7 @@ for i in admin-log4j.xml httpd-log4j.xml ftpd-log4j.xml sshd-log4j.xml as2d-log4
    if [[ -f $LOG4J_FILE ]];then
         echo "Uncommenting appenders for file: $LOG4J_FILE ..."
 
+        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="console" />)-->][$1];}' "$LOG4J_FILE"
         perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="Stdout" />)-->][$1];}' "$LOG4J_FILE"
         perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="Stderr" />)-->][$1];}' "$LOG4J_FILE"
         perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="RoutingStdout" />)-->][$1];}' "$LOG4J_FILE"

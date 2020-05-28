@@ -4,8 +4,8 @@
 #
 version: "3.4"
 services:
-  st-edge:
-    image: st-edge
+  st-backend:
+    image: st-server
     environment:
       ST_CONTAINER_CONFIG_PATH: /run/secrets/
       ST_CORE_LICENSE: /run/secrets/filedrive.license
@@ -44,4 +44,3 @@ secrets:
     file: runtime/secrets/st.license
   filedrive.license:
     file: runtime/secrets/filedrive.license
-    

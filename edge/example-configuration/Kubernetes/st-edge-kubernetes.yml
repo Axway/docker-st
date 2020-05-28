@@ -1,0 +1,93 @@
+# The st-edge-service is required only if SOCKS proxy will be used.
+apiVersion: v1
+kind: Service
+metadata:
+  name: st-edge-service
+  namespace: <namespace> # replace <namspace> with your namespace
+  labels:
+    run: st-edge
+spec:
+  type: NodePort
+  ports:
+  - port: 1080
+    targetPort: 1080
+    nodePort: #add NodePort for SOCKS proxy
+    protocol: TCP
+    name: socks
+  selector:
+    run: st-edge
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: st-edge
+  namespace: <namespace> # replace <namspace> with your namespace
+  labels:
+    run: st-edge
+spec:
+  clusterIP: None
+  ports:
+  - port: 8444
+    name: admin
+    protocol: TCP
+  selector:
+    run: st-edge
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: st-edge
+  namespace: <namespace> # replace <namspace> with your namespace
+spec:
+  serviceName: "st-edge"
+  selector:
+    matchLabels:
+      run: st-edge
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: st-edge
+    spec:
+      terminationGracePeriodSeconds: 300
+      containers:
+      - name: st-edge
+        image: <st-edge-image>
+        imagePullPolicy: Never # if using Docker registry delete this line
+        resources:
+          requests:
+            cpu: 4
+            memory: 8Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
+        readinessProbe:
+          exec:
+            command:
+            - /home/stuser/Axway/SecureTransport/bin/readiness_check.sh
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        livenessProbe:
+          exec:
+            command:
+            - /home/stuser/Axway/SecureTransport/bin/liveness_check.sh
+          initialDelaySeconds: 300
+          failureThreshold: 1
+          periodSeconds: 15  
+        env:
+        - name: ST_CONTAINER_CONFIG_PATH
+          value: "/home/stuser/Axway/SecureTransport/docker/tmp"
+        - name: ST_CORE_LICENSE
+          value: "/home/stuser/Axway/SecureTransport/docker/tmp/st.license"
+        - name: ST_FEATURE_LICENSE
+          value: "/home/stuser/Axway/SecureTransport/docker/tmp/filedrive.license"
+        - name: ST_START_SCRIPTS_CONF_PATH
+          value: /home/stuser/Axway/SecureTransport/docker/tmp/STStartScriptsConfig
+        volumeMounts:
+        - name: secret-volume 
+          mountPath: "/home/stuser/Axway/SecureTransport/docker/tmp"
+          readOnly: true
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: st-edge-secret

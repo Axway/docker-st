@@ -4,7 +4,7 @@ The repository contains the Dockerfiles and related scripts to build the Amplify
 
 # Production Deployment Guide
 
-More information about building and deploying the Docker images - [SecureTransport_5.5_Containerized_Deployment_Guide_allOS_en_HTML5](https://linkzaguide-a.com)
+More information about building and deploying the Docker images - [SecureTransport_5.5_Containerized_Deployment_Guide_allOS_en_HTML5](https://docs.axway.com/bundle/SecureTransport_55_Containerized_DeploymentGuide_allOS_en_HTML/page/Content/ContainerizedDeploymentGuide/deployment/STContainerizedDeploymentGuideStartPage.htm)
 
 # Copyright
 

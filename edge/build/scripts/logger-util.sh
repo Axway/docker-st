@@ -13,14 +13,14 @@ for i in admin-log4j.xml httpd-log4j.xml ftpd-log4j.xml sshd-log4j.xml as2d-log4
    if [[ -f $LOG4J_FILE ]];then
         echo "Uncommenting appenders for file: $LOG4J_FILE ..."
         
-        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="console" />)-->][$1];}' "$LOG4J_FILE"
-        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="Stdout" />)-->][$1];}' "$LOG4J_FILE"
-        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="Stderr" />)-->][$1];}' "$LOG4J_FILE"
-        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="RoutingStdout" />)-->][$1];}' "$LOG4J_FILE"
-        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<appender-ref ref="RoutingStderr" />)-->][$1];}' "$LOG4J_FILE"
+        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<AppenderRef ref="console" />)-->][$1];}' "$LOG4J_FILE"
+        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<AppenderRef ref="Stdout" />)-->][$1];}' "$LOG4J_FILE"
+        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<AppenderRef ref="Stderr" />)-->][$1];}' "$LOG4J_FILE"
+        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<AppenderRef ref="RoutingStdout" />)-->][$1];}' "$LOG4J_FILE"
+        perl -i -pe 'if (/<!--/) { $_ .= <> while !/-->/; s[<!--(<AppenderRef ref="RoutingStderr" />)-->][$1];}' "$LOG4J_FILE"
         echo "Commenting ServerLog and AuditLog appenders for file: $LOG4J_FILE ..."
-        perl -i -pe 's/(<appender-ref ref="ServerLog" .*?\/>)/<!-- $1 -->/g' "$LOG4J_FILE"
-        perl -i -pe 's/(<appender-ref ref="AuditLogAppender" .*?\/>)/<!-- $1 -->/g' "$LOG4J_FILE"
+        perl -i -pe 's/(<AppenderRef ref="ServerLog".*?\/>)/<!-- $1 -->/g' "$LOG4J_FILE"
+        perl -i -pe 's/(<AppenderRef ref="AuditLogAppender".*?\/>)/<!-- $1 -->/g' "$LOG4J_FILE"
         echo "Finished"
    fi
 

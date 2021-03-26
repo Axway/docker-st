@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2020 Axway Software SA and its affiliates. All rights reserved.
 #
-FROM registry.access.redhat.com/ubi8/ubi:8.0 as base_image
+FROM registry.access.redhat.com/ubi8/ubi:8.3 as base_image
 
 LABEL maintainer="Axway Software SA <https://support.axway.com>"
 LABEL org.opencontainers.image.vendor="Axway"

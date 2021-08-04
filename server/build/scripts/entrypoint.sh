@@ -12,11 +12,11 @@ if [[ $# -eq 0 ]] || [ $# -ne 1 ];then
 fi
 
 if [[ -n "$ST_CORE_LICENSE" ]];then
-   tr -d '\r' < "$ST_CORE_LICENSE" > $ST_HOME/conf/st.license
+   tr -d '\r' < "$ST_CORE_LICENSE" > $ST_HOME/conf/filedrive.license
 fi
 
 if [[ -n "$ST_FEATURE_LICENSE" ]];then
-   tr -d '\r' < "$ST_FEATURE_LICENSE" > $ST_HOME/conf/filedrive.license
+   tr -d '\r' < "$ST_FEATURE_LICENSE" > $ST_HOME/conf/st.license
 fi
 
 if [[ "$1" = 'sleep' ]]; then

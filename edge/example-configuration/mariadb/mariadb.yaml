@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-service
+  namespace: <namespace> # replace me
+  labels: 
+    run: mariadb
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: #add NodePort
+      protocol: TCP
+      name: admin
+  selector:
+    run: mariadb
+---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: mariadb
+      namespace: <namespace> # replace me
+      labels:
+        k8s-app: mariadb
+        run: mariadb
+    spec:
+      selector:
+        matchLabels:
+          run: mariadb
+      template:
+        metadata:
+          labels:
+            run: mariadb
+        spec:
+          containers:
+          - name: mariadb
+            image: mariadb:10.4.19
+            env:
+                - name: MYSQL_ROOT_PASSWORD
+                  value: "tumbleweed"
+            volumeMounts:
+                - name: nfs-volume
+                  mountPath: /var/lib/mysql
+                - name: secret-volume
+                  mountPath: /etc/mysql/conf.d
+
+          volumes:
+          - name: nfs-volume
+            nfs:
+              server: <ip-of-nfs-server>
+              path: #absolute path on NFS server
+          - name: secret-volume
+            secret:
+              secretName: mariadb-myconf
+

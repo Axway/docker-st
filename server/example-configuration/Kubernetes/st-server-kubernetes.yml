@@ -58,9 +58,9 @@ spec:
         - name: ST_CONTAINER_CONFIG_PATH
           value: "/home/stuser/Axway/SecureTransport/docker/tmp"
         - name: ST_CORE_LICENSE
-          value: "/home/stuser/Axway/SecureTransport/docker/tmp/st.license"
-        - name: ST_FEATURE_LICENSE
           value: "/home/stuser/Axway/SecureTransport/docker/tmp/filedrive.license"
+        - name: ST_FEATURE_LICENSE
+          value: "/home/stuser/Axway/SecureTransport/docker/tmp/st.license"
         - name: ST_START_SCRIPTS_CONF_PATH
           value: /home/stuser/Axway/SecureTransport/docker/tmp/STStartScriptsConfig
         volumeMounts:

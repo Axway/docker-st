@@ -32,7 +32,7 @@ ENV ST_HOME=/home/stuser/Axway/SecureTransport LC_ALL=en_US.UTF-8 LANG=en_US.UTF
 ######
 FROM base_image as install_image
 
-RUN yum install -y perl unzip
+RUN yum install -y unzip
 
 USER stuser
 
